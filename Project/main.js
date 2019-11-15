@@ -1,8 +1,8 @@
-import BinarySearchTree from "./BinarySearchTree.js";
-import Node from "./Node.js";
+import ExpressionResolver from "./ExpressionResolver.js";
 
-var BST = new BinarySearchTree();
+var expressionResolver = new ExpressionResolver();
 
 document.querySelector('#btnOK').addEventListener('click', () => {
-    
+    let operationString = document.querySelector('#operationString').value;
+    expressionResolver.resolve(operationString);
 });

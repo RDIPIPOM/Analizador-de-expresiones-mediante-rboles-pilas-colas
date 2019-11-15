@@ -1,51 +1,38 @@
-export default class BinarySearchTree {
+import BinarySearchTree from './BinarySearchTree.js';
+import Node from "./Node.js";
+
+export default class ExpressionResolver {
     constructor() {
         this._root = null;
         this._allNodes = "";
     }
 
-    add(node) {
-        if (this._root != null) {
-            this._addRecursive(this._root, node);
-        } else
-            this._root = node;
-    }
-
-    _addRecursive(root, node) {
-        if (node < root) {
-            if (root.left != null)
-                this._addRecursive(root.left, node);
-            else
-                root.left = node;
-        } else {
-            if (root.right != null)
-                this._addRecursive(root.right, node);
-            else
-                root.right = node;
+    resolve(string) {
+        let characters = new Array();
+        for (let i = 0; i < string.length; i++) {
+            characters.push(new Node(string.charAt(i)));
         }
-    }
 
-    query(code) {
-        let productFound = '';
-        if (this._root != null) {
-            let root = this._root;
-            while (productFound === '') {
-                if (code < root.code) {
-                    if (root.left != null)
-                        root = root.left
-                    else
-                        break;
-                } else if (code > root.code) {
-                    if (root.right != null)
-                        root = root.right;
-                    else
-                        break;
-                } else
-                    productFound = root.toString();
+        for (let i = 0; i < characters.length; i++) {
+            if (characters[i] === '*' || characters[i] === '/') {
+                characters[i].left = characters[i - 1];
+                characters[i].right = characters[i + 1];
+                characters.splice(i - 1, 1);
+                characters.splice(i + 1, 1);
             }
         }
 
-        return productFound;
+        for (let i = 0; i < characters.length; i++) {
+            if (characters[i] === '+' || characters[i] === '-') {
+                characters[i].left = characters[i - 1];
+                characters[i].right = characters[i + 1];
+                characters.splice(i - 1, 1);
+                characters.splice(i + 1, 1);
+                console.log('entré');
+            }
+        }
+
+        console.log(characters);
     }
 
     inOrder() {
