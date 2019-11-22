@@ -4,86 +4,47 @@ import Node from "./Node.js";
 export default class ExpressionResolver {
     constructor() {
         this._root = null;
-        this._allNodes = "";
+        this._allNodes = null;
     }
 
     resolve(string) {
         let characters = new Array();
+
+        //Fill array with all characters
         for (let i = 0; i < string.length; i++) {
             characters.push(new Node(string.charAt(i)));
         }
-
-        for (let i = 0; i < characters.length; i++) {
-            if (characters[i] === '*' || characters[i] === '/') {
+        //Make the tree
+        for (let i = 1; i < characters.length - 1; i++) {
+            if (characters[i].value === '*' || characters[i].value === '/') {
                 characters[i].left = characters[i - 1];
                 characters[i].right = characters[i + 1];
                 characters.splice(i - 1, 1);
-                characters.splice(i + 1, 1);
+                characters.splice(i, 1);
+                i--;
             }
         }
 
-        for (let i = 0; i < characters.length; i++) {
-            if (characters[i] === '+' || characters[i] === '-') {
+        for (let i = 1; i < characters.length - 1; i++) {
+            if (characters[i].value === '+' || characters[i].value === '-') {
                 characters[i].left = characters[i - 1];
                 characters[i].right = characters[i + 1];
                 characters.splice(i - 1, 1);
-                characters.splice(i + 1, 1);
-                console.log('entré');
+                characters.splice(i, 1);
+                i--;
             }
         }
 
-        console.log(characters);
-    }
-
-    inOrder() {
-        this._allNodes = '';
-
-        if (this._root != null) {
-            this._inOrderRecursive(this._root);
-        }
-
-        return this._allNodes;
-    }
-
-    _inOrderRecursive(root) {
-        if (root != null) {
-            this._inOrderRecursive(root.left);
-            this._allNodes += root.toString() + '<br>';
-            this._inOrderRecursive(root.right);
-        }
-    }
-
-    preOrder() {
-        this._allNodes = '';
-
-        if (this._root != null)
-            this._preOrderRecursive(this._root);
-
-        return this._allNodes;
+        this._stack = new Array();
+        this._preOrderRecursive(characters[0]);
+        console.log(this._stack);
     }
 
     _preOrderRecursive(root) {
         if (root != null) {
-            this._allNodes += root.toString() + '<br>';
+            this._stack.push(root.value);
             this._preOrderRecursive(root.left);
             this._preOrderRecursive(root.right);
-        }
-    }
-
-    postOrder() {
-        this._allNodes = '';
-
-        if (this._root != null)
-            this._postOrderRecursive(this._root);
-
-        return this._allNodes;
-    }
-
-    _postOrderRecursive(root) {
-        if (root != null) {
-            this._postOrderRecursive(root.left);
-            this._postOrderRecursive(root.right);
-            this._allNodes += root.toString() + '<br>';
         }
     }
 }
