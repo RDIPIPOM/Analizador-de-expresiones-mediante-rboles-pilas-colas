@@ -1,4 +1,3 @@
-import BinarySearchTree from './BinarySearchTree.js';
 import Node from "./Node.js";
 
 export default class ExpressionResolver {
@@ -35,9 +34,40 @@ export default class ExpressionResolver {
             }
         }
 
+        //Create stack
         this._stack = new Array();
         this._preOrderRecursive(characters[0]);
-        console.log(this._stack);
+
+        //Resolve operations
+        let stackNumbers = new Array();
+        let aux = 0;
+        for (let i = this._stack.length - 1; i >= 0; i--) {
+            switch (this._stack[i]) {
+                case '/':
+                    aux = stackNumbers.pop();
+                    aux = aux/stackNumbers.pop();
+                    stackNumbers.push(aux);
+                    break;
+                case '*':
+                        aux = stackNumbers.pop();
+                        aux = aux*stackNumbers.pop();
+                        stackNumbers.push(aux);
+                    break;
+                case '-':
+                        aux = stackNumbers.pop();
+                        aux = aux-stackNumbers.pop();
+                        stackNumbers.push(aux);
+                    break;
+                case '+':
+                        aux = stackNumbers.pop();
+                        aux = aux+stackNumbers.pop();
+                        stackNumbers.push(aux);
+                    break;
+                default:
+                    stackNumbers.push(Number(this._stack[i]));
+            }
+        }
+        return stackNumbers[0];
     }
 
     _preOrderRecursive(root) {
